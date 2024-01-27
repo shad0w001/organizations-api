@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using OrganizationsAPI.Infrastructure.DbContext;
+using OrganizationsAPI.Infrastructure.DbManager;
 using OrganizationsAPI.Web.OptionsSetup;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 builder.Services.ConfigureOptions<JWTOptionsSetup>();
 builder.Services.ConfigureOptions<JWTBearerOptionsSetup>();
 
+builder.Services.AddSingleton<DapperContext>();
+DbManager.EnsureDatabaseExistsAsync(
+    builder.Configuration.GetConnectionString("SqlServer"),
+    builder.Configuration.GetConnectionString("Sqlite"));
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -23,8 +30,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
-
-app.UseAuthorization();
 
 app.UseAuthorization();
 
