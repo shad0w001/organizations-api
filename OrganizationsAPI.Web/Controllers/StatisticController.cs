@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace OrganizationsAPI.Web.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/statistics")]
     [ApiController]
     public class StatisticController : ControllerBase
     {

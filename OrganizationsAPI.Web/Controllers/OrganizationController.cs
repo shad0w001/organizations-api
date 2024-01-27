@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace OrganizationsAPI.Web.Controllers
 {
-    [Route("api/organization")]
+    [Route("api/organizations")]
     [ApiController]
     public class OrganizationController : ControllerBase
     {

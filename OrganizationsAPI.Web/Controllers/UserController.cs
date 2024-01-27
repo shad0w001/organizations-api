@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace OrganizationsAPI.Web.Controllers
 {
-    [Route("api/account")]
+    [Route("api/users")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class UserController : ControllerBase
     {
         [HttpPost("register")]
         public IActionResult Register()
