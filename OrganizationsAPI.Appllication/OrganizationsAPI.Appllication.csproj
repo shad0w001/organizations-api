@@ -10,8 +10,4 @@
     <ProjectReference Include="..\OrganizationsAPI.Domain\OrganizationsAPI.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\OrganizationDTOs\" />
-  </ItemGroup>
-
 </Project>

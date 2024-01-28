@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace OrganizationsAPI.Infrastructure.Repositories
 {
-    internal class OrganizationRepository : IOrganizationRepository
+    public class OrganizationRepository : IOrganizationRepository
     {
         private readonly DapperContext _context;
 
@@ -95,9 +95,9 @@ namespace OrganizationsAPI.Infrastructure.Repositories
             }
         }
 
-        public async void Insert(Organization organizationDTO)
+        public async void Insert(Organization organization)
         {
-            if(organizationDTO is null)
+            if(organization is null)
             {
                 return;
             }
@@ -110,7 +110,7 @@ namespace OrganizationsAPI.Infrastructure.Repositories
             {
                 client.Open();
 
-                await client.ExecuteAsync(sql, organizationDTO);
+                await client.ExecuteAsync(sql, organization);
 
                 client.Close();
             }
@@ -149,7 +149,7 @@ namespace OrganizationsAPI.Infrastructure.Repositories
             const string sql = @"UPDATE Organizations
                 SET Name = @Name,
                 Website = @Website,
-                Country = @Country
+                Country = @Country,
                 Description = @Description,
                 Founded = @Founded,
                 Industry = @Industry,

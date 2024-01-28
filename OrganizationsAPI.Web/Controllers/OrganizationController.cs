@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OrganizationsAPI.Appllication.DTOs.OrganizationDTOs;
+using OrganizationsAPI.Appllication.Interfaces;
+using OrganizationsAPI.Domain.Entities;
 
 namespace OrganizationsAPI.Web.Controllers
 {
@@ -8,16 +11,27 @@ namespace OrganizationsAPI.Web.Controllers
     [ApiController]
     public class OrganizationController : ControllerBase
     {
+        private readonly IOrganizationsService _service;
+
+        public OrganizationController(IOrganizationsService service)
+        {
+            _service = service;   
+        }
+
         [HttpGet("get_all_organizations")]
         public IActionResult GetAllOrganizations()
         {
-            return Ok();
+            var organizations = _service.GetAllOrganizations();
+
+            return Ok(organizations);
         }
 
         [HttpGet("get_by_id/raw/{id}")]
         public IActionResult GetOrganizationById(string id)
         {
-            return Ok();
+            var organization = _service.GetOrganizationById(id);
+
+            return Ok(organization);
         }
 
         [Authorize]
@@ -27,25 +41,31 @@ namespace OrganizationsAPI.Web.Controllers
             return Ok();
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost("create")]
-        public IActionResult CreateOrganization()
+        public IActionResult CreateOrganization([FromBody] CreateOrganizationRequestDTO organizationDTO)
         {
+            _service.CreateOrganization(organizationDTO);
+
             return NoContent();
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPut("update_by_id/{id}")]
-        public IActionResult UpdateOrganizationById([FromRoute] string id)
+        public IActionResult UpdateOrganizationById([FromRoute] string id, [FromBody] CreateOrganizationRequestDTO organizationDTO)
         {
-            return Ok(id);
+            _service.UpdateOrganization(id, organizationDTO);
+
+            return NoContent();
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpDelete("delete/{id}")]
         public IActionResult DeleteOrganizationById(string id)
         {
-            return Ok(id);
+            _service.DeleteOrganization(id);
+
+            return NoContent();
         }
 
     }
