@@ -21,9 +21,14 @@ namespace OrganizationsAPI.Web.Controllers
         [HttpGet("get_all_organizations")]
         public IActionResult GetAllOrganizations()
         {
-            var organizations = _service.GetAllOrganizations();
+            var result = _service.GetAllOrganizations();
 
-            return Ok(organizations);
+            if (result.IsFailure)
+            {
+                return StatusCode(500, result.Error);
+            }
+
+            return Ok(result.Value);
         }
 
         [HttpGet("get_by_id/raw/{id}")]

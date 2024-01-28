@@ -1,6 +1,8 @@
 ﻿using OrganizationsAPI.Appllication.DTOs.OrganizationDTOs;
 using OrganizationsAPI.Appllication.Interfaces;
+using OrganizationsAPI.Domain.Abstractions;
 using OrganizationsAPI.Domain.Entities;
+using OrganizationsAPI.Domain.Errors;
 using OrganizationsAPI.Domain.RepositoryInterfaces;
 using System;
 using System.Collections.Generic;
@@ -19,11 +21,16 @@ namespace OrganizationsAPI.Appllication.Services
             _repository = repository;
         }
 
-        public ICollection<Organization> GetAllOrganizations()
+        public Result<ICollection<Organization>> GetAllOrganizations()
         {
             var organizations = _repository.GetAll();
 
-            return organizations.Result;
+            if(organizations.Result.Count == 0)
+            {
+                return Result.Failure<ICollection<Organization>>(OrganizationErrors.NoResourcesFound);
+            }
+
+            return Result.Success(organizations.Result);
         }
 
         public Organization GetOrganizationById(string id)

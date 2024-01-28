@@ -1,4 +1,5 @@
 ﻿using OrganizationsAPI.Appllication.DTOs.OrganizationDTOs;
+using OrganizationsAPI.Domain.Abstractions;
 using OrganizationsAPI.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace OrganizationsAPI.Appllication.Interfaces
 {
     public interface IOrganizationsService
     {
-        public ICollection<Organization> GetAllOrganizations();
+        public Result<ICollection<Organization>> GetAllOrganizations();
         public Organization GetOrganizationById(string id);
         public void CreateOrganization(CreateOrganizationRequestDTO organizationDTO);
         public void UpdateOrganization(string id, CreateOrganizationRequestDTO organizationDTO);
