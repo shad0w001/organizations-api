@@ -8,12 +8,19 @@ namespace OrganizationsAPI.Web.Controllers
     [ApiController]
     public class OrganizationController : ControllerBase
     {
+        [HttpGet("get_all_organizations")]
+        public IActionResult GetAllOrganizations()
+        {
+            return Ok();
+        }
+
         [HttpGet("get_by_id/raw/{id}")]
         public IActionResult GetOrganizationById(string id)
         {
             return Ok();
         }
 
+        [Authorize]
         [HttpGet("get_by_id/pdf/{id}")]
         public IActionResult GetPdfByOrganizationId(string id)
         {

@@ -17,7 +17,7 @@ namespace OrganizationsAPI.Infrastructure.DbManager.Scripts
             CREATE TABLE Organizations(
                 Id varchar(40) NOT NULL PRIMARY KEY,
                 CreatedAt datetime NOT NULL,
-                DeletedAt bit NULL,
+                IsDeleted bit NOT NULL,
                 Name varchar(100) NOT NULL,
                 Website varchar(265) NOT NULL,
                 Country varchar(50) NOT NULL,
@@ -33,7 +33,7 @@ namespace OrganizationsAPI.Infrastructure.DbManager.Scripts
             CREATE TABLE Users(
                 Id varchar(40) NOT NULL PRIMARY KEY,
                 CreatedAt datetime NOT NULL,
-                DeletedAt bit NOT NULL,
+                IsDeleted bit NOT NULL,
                 Username varchar(64) NOT NULL,
                 PassHash text NOT NULL,
                 Salt text NOT NULL,
@@ -46,7 +46,7 @@ namespace OrganizationsAPI.Infrastructure.DbManager.Scripts
             CREATE TABLE Roles(
                 Id varchar(40) NOT NULL PRIMARY KEY,
                 CreatedAt datetime NOT NULL,
-                DeletedAt bit NOT NULL,
+                IsDeleted bit NOT NULL,
                 RoleName varchar(20) NOT NULL,
                 UNIQUE(RoleName)
             );";

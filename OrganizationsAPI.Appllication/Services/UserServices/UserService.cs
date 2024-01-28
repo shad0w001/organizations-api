@@ -1,4 +1,4 @@
-﻿using OrganizationsAPI.Appllication.DTOs;
+﻿using OrganizationsAPI.Appllication.DTOs.LoginUserDTOs;
 using OrganizationsAPI.Appllication.Interfaces.UserServices;
 using OrganizationsAPI.Domain.Entities.Authentication;
 using OrganizationsAPI.Domain.RepositoryInterfaces;
@@ -24,7 +24,7 @@ namespace OrganizationsAPI.Appllication.Services.UserServices
 
         }
 
-        public async Task<string> LoginUser(LoginUserDTO userDTO)
+        public async Task<string> LoginUser(LoginUserRequestDTO userDTO)
         {
             User? user = _userRepository.GetUserByName(userDTO.Username);
 

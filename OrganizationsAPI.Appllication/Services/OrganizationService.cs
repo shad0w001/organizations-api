@@ -9,5 +9,6 @@ namespace OrganizationsAPI.Appllication.Services
 {
     internal class OrganizationService : IOrganizationsService
     {
+
     }
 }
