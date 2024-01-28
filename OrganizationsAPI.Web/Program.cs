@@ -9,12 +9,25 @@ using OrganizationsAPI.Infrastructure.DbManager;
 using OrganizationsAPI.Infrastructure.Repositories;
 using OrganizationsAPI.Infrastructure.Authentication;
 using OrganizationsAPI.Web.OptionsSetup;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey
+    });
+
+    options.OperationFilter<SecurityRequirementsOperationFilter>();
+});
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
 
@@ -28,6 +41,7 @@ DbManager.EnsureDatabaseExistsAsync(
 
 builder.Services.AddTransient<IOrganizationRepository, OrganizationRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IRoleRepository, RoleRepository>();
 
 builder.Services.AddTransient<IOrganizationsService, OrganizationService>();
 builder.Services.AddTransient<IUserService, UserService>();

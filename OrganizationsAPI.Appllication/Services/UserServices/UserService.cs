@@ -18,29 +18,33 @@ namespace OrganizationsAPI.Appllication.Services.UserServices
         private readonly IUserRepository _userRepository;
         private readonly IJWTProvider _jwtProvider;
         private readonly IPasswordManager _passwordManager;
+        private readonly IRoleRepository _roleRepository;
 
-        public UserService(IUserRepository userRepository, IJWTProvider jwtProvider, IPasswordManager passwordManager)
+        public UserService(IUserRepository userRepository, IJWTProvider jwtProvider, IPasswordManager passwordManager, IRoleRepository roleRepository)
         {
             _userRepository = userRepository;
             _jwtProvider = jwtProvider;
             _passwordManager = passwordManager;
-
+            _roleRepository = roleRepository;
         }
 
         public Result<string> RegisterUser(LoginUserRequestDTO userDTO)
         {
             User? alreadyExistingUser = _userRepository.GetUserByName(userDTO.Username).Result;
 
-            if (alreadyExistingUser is null)
+            if (alreadyExistingUser is not null)
             {
                 return Result.Failure<string>(UserErrors.UserAlreadyExists);
             }
 
+            Role userRole = _roleRepository.GetRoleByName("User").Result;
+
             User user = new User
             {
                 Username = userDTO.Username,
-                PasswordHash = _passwordManager.HashPassword(userDTO.Password, out string salt),
-                Salt = salt
+                PassHash = _passwordManager.HashPassword(userDTO.Password, out string salt),
+                Salt = salt,
+                RoleId = userRole.Id
             };
 
             _userRepository.Create(user);
@@ -57,7 +61,7 @@ namespace OrganizationsAPI.Appllication.Services.UserServices
                 return Result.Failure<string>(UserErrors.UserNotFound);
             }
 
-            if (_passwordManager.VerifyPassword(userDTO.Password, user.PasswordHash, user.Salt) is false)
+            if (_passwordManager.VerifyPassword(userDTO.Password, user.PassHash, user.Salt) is false)
             {
                 return Result.Failure<string>(UserErrors.InvalidCredentials);
             }
@@ -83,7 +87,7 @@ namespace OrganizationsAPI.Appllication.Services.UserServices
                 return Result.Failure<string>(UserErrors.OperationFailed);
             }
 
-            return Result.Success(username);
+            return Result.Success("The user has been deleted successfully");
         }
     }
 }

@@ -27,7 +27,7 @@ namespace OrganizationsAPI.Infrastructure.Authentication
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(JwtRegisteredClaimNames.Name, user.Username),
-                new Claim("role", role)
+                new Claim(ClaimTypes.Role, user.RoleId)
             };
 
             var signingCredentials = new SigningCredentials(

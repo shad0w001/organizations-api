@@ -44,9 +44,9 @@ namespace OrganizationsAPI.Web.Controllers
             return Ok(result.Value);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpGet("get_by_id/pdf/{id}")]
-        public IActionResult GetPdfByOrganizationId([FromRoute] string id, [FromHeader] string token)
+        public IActionResult GetPdfByOrganizationId([FromRoute] string id)
         {
             var result = _service.GetOrganizationById(id);
 
