@@ -12,8 +12,11 @@ namespace OrganizationsAPI.Domain.Errors
         public static readonly Error InvalidIdInput = 
             new("Organization.InvalidIdInput", "The ID field cannot be empty");
 
+        public static readonly Error InvalidInput =
+            new("Organization.InvalidInput", "The query cannot be empty.");
+
         public static readonly Error NotFound =
-            new("Organization.NotFound", "The organization with the following ID does not exist.");
+            new("Organization.NotFound", "The organization with the provided ID does not exist.");
 
         public static readonly Error NoResourcesFound =
             new("Organization.NoResourcesFound", "There are no available resources for this request.");

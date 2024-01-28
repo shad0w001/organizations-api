@@ -5,11 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OrganizationsAPI.Appllication.DTOs.LoginUserDTOs
+namespace OrganizationsAPI.Appllication.DTOs.UserDTOs.LoginUserDTOs
 {
     public class LoginUserRequestDTO
     {
+        [Required]
         public string Username { get; set; }
+
+        [Required]
         public string Password { get; set; }
     }
 }

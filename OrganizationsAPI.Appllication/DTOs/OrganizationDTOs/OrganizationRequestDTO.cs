@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OrganizationsAPI.Appllication.DTOs.OrganizationDTOs
 {
-    public class CreateOrganizationRequestDTO
+    public class OrganizationRequestDTO
     {
         [Required]
         public string Name { get; set; }

@@ -1,6 +1,9 @@
-﻿using OrganizationsAPI.Appllication.DTOs.LoginUserDTOs;
+﻿using OrganizationsAPI.Appllication.DTOs.UserDTOs.LoginUserDTOs;
 using OrganizationsAPI.Appllication.Interfaces.UserServices;
+using OrganizationsAPI.Domain.Abstractions;
+using OrganizationsAPI.Domain.Entities;
 using OrganizationsAPI.Domain.Entities.Authentication;
+using OrganizationsAPI.Domain.Errors;
 using OrganizationsAPI.Domain.RepositoryInterfaces;
 using System;
 using System.Collections.Generic;
@@ -10,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace OrganizationsAPI.Appllication.Services.UserServices
 {
-    internal class UserService : IUserService
+    public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
         private readonly IJWTProvider _jwtProvider;
@@ -24,23 +27,63 @@ namespace OrganizationsAPI.Appllication.Services.UserServices
 
         }
 
-        public async Task<string> LoginUser(LoginUserRequestDTO userDTO)
+        public Result<string> RegisterUser(LoginUserRequestDTO userDTO)
         {
-            User? user = _userRepository.GetUserByName(userDTO.Username);
+            User? alreadyExistingUser = _userRepository.GetUserByName(userDTO.Username).Result;
+
+            if (alreadyExistingUser is null)
+            {
+                return Result.Failure<string>(UserErrors.UserAlreadyExists);
+            }
+
+            User user = new User
+            {
+                Username = userDTO.Username,
+                PasswordHash = _passwordManager.HashPassword(userDTO.Password, out string salt),
+                Salt = salt
+            };
+
+            _userRepository.Create(user);
+
+            return Result.Success("You have been registered successfully");
+        }
+
+        public Result<string> LoginUser(LoginUserRequestDTO userDTO)
+        {
+            User? user = _userRepository.GetUserByName(userDTO.Username).Result;
 
             if (user is null)
             {
-                return string.Empty;
+                return Result.Failure<string>(UserErrors.UserNotFound);
             }
 
             if (_passwordManager.VerifyPassword(userDTO.Password, user.PasswordHash, user.Salt) is false)
             {
-                return string.Empty;
+                return Result.Failure<string>(UserErrors.InvalidCredentials);
             }
 
             var token = _jwtProvider.GenerateToken(user, user.RoleId);
 
-            return token;
+            return Result.Success(token);
+        }
+
+        public Result<string> DeleteUser(string username)
+        {
+            User? user = _userRepository.GetUserByName(username).Result;
+
+            if (user is null)
+            {
+                return Result.Failure<string>(UserErrors.UserNotFound);
+            }
+
+            var affectedRows = _userRepository.SoftDelete(username);
+
+            if(affectedRows.Result == 0)
+            {
+                return Result.Failure<string>(UserErrors.OperationFailed);
+            }
+
+            return Result.Success(username);
         }
     }
 }

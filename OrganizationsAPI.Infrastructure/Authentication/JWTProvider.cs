@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace OrganizationsAPI.Infrastructure.Authentication
 {
-    internal class JWTProvider : IJWTProvider
+    public class JWTProvider : IJWTProvider
     {
         private readonly JWTOptions _options;
 

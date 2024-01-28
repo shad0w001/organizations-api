@@ -1,4 +1,5 @@
-﻿using OrganizationsAPI.Appllication.DTOs.LoginUserDTOs;
+﻿using OrganizationsAPI.Appllication.DTOs.UserDTOs.LoginUserDTOs;
+using OrganizationsAPI.Domain.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace OrganizationsAPI.Appllication.Interfaces.UserServices
 {
     public interface IUserService
     {
-        public Task<string> LoginUser(LoginUserRequestDTO userDTO);
+        public Result<string> RegisterUser(LoginUserRequestDTO userDTO);
+        public Result<string> LoginUser(LoginUserRequestDTO userDTO);
+        public Result<string> DeleteUser(string username);
     }
 }

@@ -37,11 +37,6 @@ namespace OrganizationsAPI.Infrastructure.Repositories
 
         public async Task<Organization> GetById(string id)
         {
-            if (string.IsNullOrEmpty(id))
-            {
-                return null;
-            }
-
             const string sql = @"SELECT * FROM Organizations WHERE IsDeleted = 0 AND Id = @Id";
 
             using (var client = _context.CreateSqlServerConnection())
@@ -55,11 +50,6 @@ namespace OrganizationsAPI.Infrastructure.Repositories
                     });
 
                 client.Close();
-
-                if(organization is null)
-                {
-                    return null;
-                }
 
                 return organization;
             }
@@ -97,11 +87,6 @@ namespace OrganizationsAPI.Infrastructure.Repositories
 
         public async void Insert(Organization organization)
         {
-            if(organization is null)
-            {
-                return;
-            }
-
             const string sql = @"INSERT INTO Organizations
                 (Id, CreatedAt, IsDeleted, Name, Website, Country, Description, Founded, Industry, NumberOfEmployees)
                 VALUES (@Id, @CreatedAt, @IsDeleted, @Name, @Website, @Country, @Description, @Founded, @Industry, @NumberOfEmployees)";
@@ -110,19 +95,14 @@ namespace OrganizationsAPI.Infrastructure.Repositories
             {
                 client.Open();
 
-                await client.ExecuteAsync(sql, organization);
+                var rows = await client.ExecuteAsync(sql, organization);
 
                 client.Close();
             }
         }
 
-        public async void SoftDelete(string id)
+        public async Task<int> SoftDelete(string id)
         {
-            if (string.IsNullOrEmpty(id))
-            {
-                return;
-            }
-
             const string sql = @"UPDATE Organizations
                 SET IsDeleted = 1 WHERE Id = @Id";
 
@@ -130,22 +110,19 @@ namespace OrganizationsAPI.Infrastructure.Repositories
             {
                 client.Open();
 
-                await client.ExecuteAsync(sql, new
+                var affectedRows = await client.ExecuteAsync(sql, new
                 {
                     Id = id
                 });
 
                 client.Close();
+
+                return affectedRows;
             }
         }
 
-        public async void Update(Organization organizationDTO)
+        public async Task<int> Update(Organization organizationDTO)
         {
-            if (organizationDTO is null)
-            {
-                return;
-            }
-
             const string sql = @"UPDATE Organizations
                 SET Name = @Name,
                 Website = @Website,
@@ -160,9 +137,11 @@ namespace OrganizationsAPI.Infrastructure.Repositories
             {
                 client.Open();
 
-                await client.ExecuteAsync(sql, organizationDTO);
+                int affectedRows = await client.ExecuteAsync(sql, organizationDTO);
 
                 client.Close();
+
+                return affectedRows;
             }
         }
     }

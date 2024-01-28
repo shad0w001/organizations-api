@@ -13,7 +13,7 @@ namespace OrganizationsAPI.Domain.RepositoryInterfaces
         public Task<Organization> GetById(string id);
         public Task<Organization> GetByName(string name);
         public void Insert(Organization organization);
-        public void Update(Organization organization);
-        public void SoftDelete(string id);
+        public Task<int> Update(Organization organization);
+        public Task<int> SoftDelete(string id);
     }
 }

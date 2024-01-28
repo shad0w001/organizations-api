@@ -1,4 +1,5 @@
-﻿using OrganizationsAPI.Domain.Entities.Authentication;
+﻿using OrganizationsAPI.Domain.Entities;
+using OrganizationsAPI.Domain.Entities.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace OrganizationsAPI.Domain.RepositoryInterfaces
 {
     public interface IUserRepository
     {
-        public User? GetUserByName(string username);
+        public Task<User> GetUserByName(string username);
+        public void Create(User user);
+        public Task<int> SoftDelete(string id);
     }
 }

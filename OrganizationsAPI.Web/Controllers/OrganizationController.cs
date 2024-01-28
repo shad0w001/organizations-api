@@ -32,45 +32,73 @@ namespace OrganizationsAPI.Web.Controllers
         }
 
         [HttpGet("get_by_id/raw/{id}")]
-        public IActionResult GetOrganizationById(string id)
+        public IActionResult GetOrganizationById([FromRoute] string id)
         {
-            var organization = _service.GetOrganizationById(id);
+            var result = _service.GetOrganizationById(id);
 
-            return Ok(organization);
+            if (result.IsFailure)
+            {
+                return StatusCode(500, result.Error);
+            }
+
+            return Ok(result.Value);
         }
 
         [Authorize]
         [HttpGet("get_by_id/pdf/{id}")]
-        public IActionResult GetPdfByOrganizationId(string id)
+        public IActionResult GetPdfByOrganizationId([FromRoute] string id, [FromHeader] string token)
         {
-            return Ok();
+            var result = _service.GetOrganizationById(id);
+
+            if (result.IsFailure)
+            {
+                return StatusCode(500, result.Error);
+            }
+
+            //it will return a pdf file in the future
+            return Ok(result.Value);
         }
 
         //[Authorize]
         [HttpPost("create")]
-        public IActionResult CreateOrganization([FromBody] CreateOrganizationRequestDTO organizationDTO)
+        public IActionResult CreateOrganization([FromBody] OrganizationRequestDTO organizationDTO)
         {
-            _service.CreateOrganization(organizationDTO);
+            var result = _service.CreateOrganization(organizationDTO);
 
-            return NoContent();
+            if (result.IsFailure)
+            {
+                return StatusCode(500, result.Error);
+            }
+
+            return Ok(result.Value);
         }
 
         //[Authorize]
         [HttpPut("update_by_id/{id}")]
-        public IActionResult UpdateOrganizationById([FromRoute] string id, [FromBody] CreateOrganizationRequestDTO organizationDTO)
+        public IActionResult UpdateOrganizationById([FromRoute] string id, [FromBody] OrganizationRequestDTO organizationDTO)
         {
-            _service.UpdateOrganization(id, organizationDTO);
+            var result = _service.UpdateOrganization(id, organizationDTO);
 
-            return NoContent();
+            if (result.IsFailure)
+            {
+                return StatusCode(500, result.Error);
+            }
+
+            return Ok(result.Value);
         }
 
         //[Authorize]
         [HttpDelete("delete/{id}")]
-        public IActionResult DeleteOrganizationById(string id)
+        public IActionResult DeleteOrganizationById([FromRoute] string id)
         {
-            _service.DeleteOrganization(id);
+            var result = _service.DeleteOrganization(id);
 
-            return NoContent();
+            if (result.IsFailure)
+            {
+                return StatusCode(500, result.Error);
+            }
+
+            return Ok(result.Value);
         }
 
     }

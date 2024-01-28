@@ -33,24 +33,29 @@ namespace OrganizationsAPI.Appllication.Services
             return Result.Success(organizations.Result);
         }
 
-        public Organization GetOrganizationById(string id)
+        public Result<Organization> GetOrganizationById(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
-                return null;
+                return Result.Failure<Organization>(OrganizationErrors.InvalidIdInput);
             }
 
             var organization = _repository.GetById(id);
 
-            if(organization is null)
+            if(organization.Result is null)
             {
-                return null;
+                return Result.Failure<Organization>(OrganizationErrors.NotFound);
             }
 
-            return organization.Result;
+            return Result.Success(organization.Result);
         }
-        public void CreateOrganization(CreateOrganizationRequestDTO organizationDTO)
+        public Result<string> CreateOrganization(OrganizationRequestDTO organizationDTO)
         {
+            if (organizationDTO is null)
+            {
+                return Result.Failure<string>(OrganizationErrors.InvalidInput);
+            }
+
             Organization organization = new Organization
             {
                 Name = organizationDTO.Name,
@@ -63,13 +68,20 @@ namespace OrganizationsAPI.Appllication.Services
             };
 
             _repository.Insert(organization);
+
+            return Result.Success("The organization has been created successfully");
         }
 
-        public void UpdateOrganization(string id, CreateOrganizationRequestDTO organizationDTO)
+        public Result<string> UpdateOrganization(string id, OrganizationRequestDTO organizationDTO)
         {
             if (string.IsNullOrEmpty(id))
             {
-                return;
+                return Result.Failure<string>(OrganizationErrors.InvalidIdInput);
+            }
+
+            if (organizationDTO is null)
+            {
+                return Result.Failure<string>(OrganizationErrors.InvalidInput);
             }
 
             Organization organization = new Organization
@@ -84,17 +96,31 @@ namespace OrganizationsAPI.Appllication.Services
                 NumberOfEmployees = organizationDTO.NumberOfEmployees,
             };
 
-            _repository.Update(organization);
+            var affectedRows = _repository.Update(organization);
+
+            if(affectedRows.Result == 0)
+            {
+                return Result.Failure<string>(OrganizationErrors.NotFound);
+            }
+
+            return Result.Success("The organization has been updated successfully");
         }
 
-        public void DeleteOrganization(string id)
+        public Result<string> DeleteOrganization(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
-                return;
+                return Result.Failure<string>(OrganizationErrors.InvalidIdInput);
             }
 
-            _repository.SoftDelete(id);
+            var affectedRows = _repository.SoftDelete(id);
+
+            if (affectedRows.Result == 0)
+            {
+                return Result.Failure<string>(OrganizationErrors.NotFound);
+            }
+
+            return Result.Success("The organization has been deleted successfully");
         }
     }
 }

@@ -12,9 +12,9 @@ namespace OrganizationsAPI.Appllication.Interfaces
     public interface IOrganizationsService
     {
         public Result<ICollection<Organization>> GetAllOrganizations();
-        public Organization GetOrganizationById(string id);
-        public void CreateOrganization(CreateOrganizationRequestDTO organizationDTO);
-        public void UpdateOrganization(string id, CreateOrganizationRequestDTO organizationDTO);
-        public void DeleteOrganization(string id);
+        public Result<Organization> GetOrganizationById(string id);
+        public Result<string> CreateOrganization(OrganizationRequestDTO organizationDTO);
+        public Result<string> UpdateOrganization(string id, OrganizationRequestDTO organizationDTO);
+        public Result<string> DeleteOrganization(string id);
     }
 }
