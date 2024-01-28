@@ -6,7 +6,7 @@ using System.Text;
 
 namespace OrganizationsAPI.Web.OptionsSetup
 {
-    public class JWTBearerOptionsSetup : IConfigureOptions<JwtBearerOptions>
+    public class JWTBearerOptionsSetup : IConfigureNamedOptions<JwtBearerOptions>
     {
         private readonly JWTOptions _jwtOptions;
 
@@ -14,7 +14,13 @@ namespace OrganizationsAPI.Web.OptionsSetup
         {
             _jwtOptions = jwtOptions.Value;
         }
+
         public void Configure(JwtBearerOptions options)
+        {
+            
+        }
+
+        public void Configure(string? name, JwtBearerOptions options)
         {
             options.TokenValidationParameters = new()
             {
