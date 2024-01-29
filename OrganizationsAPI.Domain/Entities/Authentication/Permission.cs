@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace OrganizationsAPI.Domain.Entities.Authentication
 {
-    public class User : Entity
+    public class Permission : Entity
     {
-        public string Username { get; set; }
-        public string PassHash { get; set; }
-        public string Salt { get; set; }
+        public string PermissionName { get; set; }
     }
 }

@@ -43,8 +43,7 @@ namespace OrganizationsAPI.Appllication.Services.UserServices
             {
                 Username = userDTO.Username,
                 PassHash = _passwordManager.HashPassword(userDTO.Password, out string salt),
-                Salt = salt,
-                RoleId = userRole.Id
+                Salt = salt
             };
 
             _userRepository.Create(user);
@@ -66,7 +65,7 @@ namespace OrganizationsAPI.Appllication.Services.UserServices
                 return Result.Failure<string>(UserErrors.InvalidCredentials);
             }
 
-            var token = _jwtProvider.GenerateToken(user, user.RoleId);
+            var token = _jwtProvider.GenerateToken(user);
 
             return Result.Success(token);
         }

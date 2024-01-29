@@ -37,7 +37,6 @@ namespace OrganizationsAPI.Infrastructure.DbManager.Scripts
                 Username varchar(64) NOT NULL,
                 PassHash text NOT NULL,
                 Salt text NOT NULL,
-                UserRoleId varchar(40) NULL FOREIGN KEY REFERENCES [Roles](Id) ON DELETE SET NULL,
                 UNIQUE(Username)
             );";
 

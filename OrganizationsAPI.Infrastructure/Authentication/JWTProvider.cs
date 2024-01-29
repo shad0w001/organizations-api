@@ -21,13 +21,12 @@ namespace OrganizationsAPI.Infrastructure.Authentication
             _options = options.Value;
         }
 
-        public string GenerateToken(User user, string role)
+        public string GenerateToken(User user)
         {
             var claims = new Claim[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-                new Claim(JwtRegisteredClaimNames.Name, user.Username),
-                new Claim(ClaimTypes.Role, user.RoleId)
+                new Claim(JwtRegisteredClaimNames.Name, user.Username)
             };
 
             var signingCredentials = new SigningCredentials(
