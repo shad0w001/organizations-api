@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OrganizationsAPI.Infrastructure.DbManager.Scripts
 {
-    internal static class DbScripts
+    internal static class DbCreationScripts
     {
         public const string CREATE_SQL_SERVER_DATABASE_IF_NOT_EXISTS =
             @"IF NOT EXISTS (SELECT * FROM sys.databases WHERE NAME = 'OrganizationsAPI') 
@@ -37,7 +37,7 @@ namespace OrganizationsAPI.Infrastructure.DbManager.Scripts
                 Username varchar(64) NOT NULL,
                 PassHash text NOT NULL,
                 Salt text NOT NULL,
-                UNIQUE(Username)
+                UNIQUE(Id, Username)
             );";
 
         public const string CREATE_ROLE_TABLE_IF_NOT_EXISTS =
@@ -47,7 +47,31 @@ namespace OrganizationsAPI.Infrastructure.DbManager.Scripts
                 CreatedAt datetime NOT NULL,
                 IsDeleted bit NOT NULL,
                 RoleName varchar(20) NOT NULL,
-                UNIQUE(RoleName)
+                UNIQUE(Id, RoleName)
+            );";
+
+        public const string CREATE_PERMISSIONS_TABLE_IF_NOT_EXISTS =
+            @"IF OBJECT_ID(N'Permissions', N'U') IS NULL
+            CREATE TABLE Permissions(
+                Id varchar(40) NOT NULL PRIMARY KEY,
+                CreatedAt datetime NOT NULL,
+                IsDeleted bit NOT NULL,
+                PermissionName varchar(20) NOT NULL,
+                UNIQUE(Id, PermissionName)
+            );";
+
+        public const string CREATE_USER_ROLES_TABLE_IF_NOT_EXISTS =
+            @"IF OBJECT_ID(N'UserRoles', N'U') IS NULL
+            CREATE TABLE UserRoles(
+                UserId varchar(40) FOREIGN KEY REFERENCES [Users](Id) ON DELETE SET NULL,
+                RoleId varchar(40) FOREIGN KEY REFERENCES [Roles](Id) ON DELETE SET NULL
+            );";
+
+        public const string CREATE_ROLE_PERMISSIONS_TABLE_IF_NOT_EXISTS =
+            @"IF OBJECT_ID(N'RolePermissions', N'U') IS NULL
+            CREATE TABLE RolePermissions(
+                RoleId varchar(40) FOREIGN KEY REFERENCES [Roles](Id) ON DELETE SET NULL,
+                PermissionId varchar(40) FOREIGN KEY REFERENCES [Permissions](Id) ON DELETE SET NULL
             );";
 
         public const string CREATE_INSERTED_FILES_TABLE_IF_NOT_EXISTS =
