@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrganizationsAPI.Appllication.DTOs.UserDTOs.LoginUserDTOs;
 using OrganizationsAPI.Appllication.Interfaces.UserServices;
+using OrganizationsAPI.Infrastructure.Authorization;
 
 namespace OrganizationsAPI.Web.Controllers
 {
@@ -44,7 +45,7 @@ namespace OrganizationsAPI.Web.Controllers
             return Ok(result.Value);
         }
 
-        [Authorize]
+        [HasPermission(AuthPermissions.FullAccess)]
         [HttpDelete("delete/{username}")]
         public IActionResult Delete([FromRoute] string username)
         {

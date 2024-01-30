@@ -89,6 +89,8 @@ namespace OrganizationsAPI.Infrastructure.DbManager
             using (connection)
             {
                 await connection.ExecuteAsync(DbCreationScripts.CREATE_INSERTED_FILES_TABLE_IF_NOT_EXISTS);
+                await connection.ExecuteAsync(DbCreationScripts.CREATE_ORGANIZATION_COUNT_BY_INDUSTRY_TABLE_IF_NOT_EXISTS);
+                await connection.ExecuteAsync(DbCreationScripts.CREATE_ORGANIZATION_COUNT_BY_COUNTRY_TABLE_IF_NOT_EXISTS);
 
                 connection.Close();
             }

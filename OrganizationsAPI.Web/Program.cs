@@ -45,7 +45,9 @@ DbManager.EnsureDatabaseExistsAsync(
 builder.Services.AddTransient<IOrganizationRepository, OrganizationRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IRoleRepository, RoleRepository>();
+builder.Services.AddTransient<IStatisticRepository, StatisticRepository>();
 
+builder.Services.AddTransient<IStatisticsService, StatisticsService>();
 builder.Services.AddTransient<IOrganizationsService, OrganizationService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IPermissionService, PermissionService>();

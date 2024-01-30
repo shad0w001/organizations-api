@@ -20,6 +20,7 @@ namespace OrganizationsAPI.Web.Controllers
             _service = service;   
         }
 
+        [HasPermission(AuthPermissions.ReadAccess)]
         [HttpGet("get_all_organizations")]
         public IActionResult GetAllOrganizations()
         {
@@ -33,6 +34,7 @@ namespace OrganizationsAPI.Web.Controllers
             return Ok(result.Value);
         }
 
+        [HasPermission(AuthPermissions.ReadAccess)]
         [HttpGet("get_by_id/raw/{id}")]
         public IActionResult GetOrganizationById([FromRoute] string id)
         {
@@ -61,7 +63,7 @@ namespace OrganizationsAPI.Web.Controllers
             return Ok(result.Value);
         }
 
-        //[Authorize]
+        [HasPermission(AuthPermissions.WriteAccess)]
         [HttpPost("create")]
         public IActionResult CreateOrganization([FromBody] OrganizationRequestDTO organizationDTO)
         {
@@ -75,7 +77,7 @@ namespace OrganizationsAPI.Web.Controllers
             return Ok(result.Value);
         }
 
-        //[Authorize]
+        [HasPermission(AuthPermissions.WriteAccess)]
         [HttpPut("update_by_id/{id}")]
         public IActionResult UpdateOrganizationById([FromRoute] string id, [FromBody] OrganizationRequestDTO organizationDTO)
         {
@@ -89,7 +91,7 @@ namespace OrganizationsAPI.Web.Controllers
             return Ok(result.Value);
         }
 
-        //[Authorize]
+        [HasPermission(AuthPermissions.FullAccess)]
         [HttpDelete("delete/{id}")]
         public IActionResult DeleteOrganizationById([FromRoute] string id)
         {

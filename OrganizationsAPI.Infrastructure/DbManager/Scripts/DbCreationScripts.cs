@@ -80,5 +80,19 @@ namespace OrganizationsAPI.Infrastructure.DbManager.Scripts
                 InsertionDate TEXT NOT NULL
             );";
 
+        public const string CREATE_ORGANIZATION_COUNT_BY_COUNTRY_TABLE_IF_NOT_EXISTS =
+            @"CREATE TABLE IF NOT EXISTS CountryCount (
+                Country TEXT NOT NULL,
+                LastUpdated TEXT NOT NULL,
+                Count INT NOT NULL
+            );";
+
+        public const string CREATE_ORGANIZATION_COUNT_BY_INDUSTRY_TABLE_IF_NOT_EXISTS =
+            @"CREATE TABLE IF NOT EXISTS IndustryCount (
+                Industry TEXT NOT NULL,
+                LastUpdated TEXT NOT NULL,
+                Count INT NOT NULL
+            );";
+
     }
 }
