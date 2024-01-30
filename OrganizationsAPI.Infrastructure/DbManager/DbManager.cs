@@ -11,6 +11,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 
 namespace OrganizationsAPI.Infrastructure.DbManager
 {
@@ -71,6 +72,14 @@ namespace OrganizationsAPI.Infrastructure.DbManager
             {
                 await connection.ExecuteAsync(DbSeedingScripts.SEED_PERMISSIONS, DbSeedingScripts.permissions);
                 await connection.ExecuteAsync(DbSeedingScripts.SEED_ROLES, DbSeedingScripts.roles);
+
+                var rolePermissionSeedingCommands
+                    = DbSeedingScripts.SEED_ROLE_PERMISSIONS.Split(
+                        new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+                foreach(string command in rolePermissionSeedingCommands)
+                {
+                    await connection.ExecuteAsync(command);
+                }
             }
         }
 
