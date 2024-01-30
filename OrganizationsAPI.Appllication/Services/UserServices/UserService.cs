@@ -37,16 +37,34 @@ namespace OrganizationsAPI.Appllication.Services.UserServices
                 return Result.Failure<string>(UserErrors.UserAlreadyExists);
             }
 
-            Role userRole = _roleRepository.GetRoleByName("User").Result;
+            if (userDTO.Username == "Admin")
+            {
+                Role adminRole = _roleRepository.GetRoleByName("Admin").Result;
+
+                User adminUser = new User
+                {
+                    Username = userDTO.Username,
+                    PassHash = _passwordManager.HashPassword(userDTO.Password, out string adminSalt),
+                    Salt = adminSalt
+                };
+
+                _userRepository.Create(adminUser);
+                _roleRepository.AddUserToRole(adminUser.Id, adminRole);
+
+                return Result.Success("You have been registered successfully");
+            }
+
+            Role userRole = _roleRepository.GetRoleByName("Admin").Result;
 
             User user = new User
             {
                 Username = userDTO.Username,
-                PassHash = _passwordManager.HashPassword(userDTO.Password, out string salt),
-                Salt = salt
+                PassHash = _passwordManager.HashPassword(userDTO.Password, out string userSalt),
+                Salt = userSalt
             };
 
             _userRepository.Create(user);
+            _roleRepository.AddUserToRole(user.Id, userRole);
 
             return Result.Success("You have been registered successfully");
         }
@@ -65,7 +83,7 @@ namespace OrganizationsAPI.Appllication.Services.UserServices
                 return Result.Failure<string>(UserErrors.InvalidCredentials);
             }
 
-            var token = _jwtProvider.GenerateToken(user);
+            var token = _jwtProvider.GenerateTokenAsync(user).Result;
 
             return Result.Success(token);
         }
@@ -81,7 +99,7 @@ namespace OrganizationsAPI.Appllication.Services.UserServices
 
             var affectedRows = _userRepository.SoftDelete(username);
 
-            if(affectedRows.Result == 0)
+            if (affectedRows.Result == 0)
             {
                 return Result.Failure<string>(UserErrors.OperationFailed);
             }

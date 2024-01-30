@@ -34,6 +34,26 @@ namespace OrganizationsAPI.Infrastructure.Repositories
             }
         }
 
+        public async void AddUserToRole(string userId, Role role)
+        {
+            const string sql = @"INSERT INTO UserRoles
+                (UserId, RoleId)
+                VALUES (@UserId, @RoleId)";
+
+            using (var client = _context.CreateSqlServerConnection())
+            {
+                client.Open();
+
+                var rows = await client.ExecuteAsync(sql, new
+                {
+                    UserId = userId,
+                    RoleId = role.Id
+                });
+
+                client.Close();
+            }
+        }
+
         public async Task<Role> GetRoleById(string id)
         {
             const string sql = @"SELECT * FROM Roles WHERE IsDeleted = 0 AND Id = @Id";

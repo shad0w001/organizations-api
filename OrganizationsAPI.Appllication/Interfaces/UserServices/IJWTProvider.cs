@@ -9,6 +9,6 @@ namespace OrganizationsAPI.Appllication.Interfaces.UserServices
 {
     public interface IJWTProvider
     {
-        public string GenerateToken(User user);
+        public Task<string> GenerateTokenAsync(User user);
     }
 }

@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using OrganizationsAPI.Appllication.DTOs.OrganizationDTOs;
 using OrganizationsAPI.Appllication.Interfaces;
 using OrganizationsAPI.Domain.Entities;
+using OrganizationsAPI.Domain.Entities.Authentication;
+using OrganizationsAPI.Infrastructure.Authorization;
 
 namespace OrganizationsAPI.Web.Controllers
 {
@@ -44,7 +46,7 @@ namespace OrganizationsAPI.Web.Controllers
             return Ok(result.Value);
         }
 
-        [Authorize(Roles = "User")]
+        [HasPermission(AuthPermissions.ReadAccess)]
         [HttpGet("get_by_id/pdf/{id}")]
         public IActionResult GetPdfByOrganizationId([FromRoute] string id)
         {

@@ -11,6 +11,7 @@ namespace OrganizationsAPI.Domain.RepositoryInterfaces
     {
         public void CreateRole(Role role);
         public Task<Role> GetRoleByName(string name);
+        public void AddUserToRole(string userId, Role role);
         public Task<Role> GetRoleById(string id);
         public Task<int> UpdateRole(Role role);
         public Task<int> SoftDelete(string id);

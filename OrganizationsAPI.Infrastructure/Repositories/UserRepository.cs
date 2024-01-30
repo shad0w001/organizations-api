@@ -23,8 +23,8 @@ namespace OrganizationsAPI.Infrastructure.Repositories
         public async void Create(User user)
         {
             const string sql = @"INSERT INTO Users
-                (Id, CreatedAt, IsDeleted, Username, PassHash, Salt, RoleId)
-                VALUES (@Id, @CreatedAt, @IsDeleted, @Username, @PassHash, @Salt, @RoleId)";
+                (Id, CreatedAt, IsDeleted, Username, PassHash, Salt)
+                VALUES (@Id, @CreatedAt, @IsDeleted, @Username, @PassHash, @Salt)";
 
             using (var client = _context.CreateSqlServerConnection())
             {

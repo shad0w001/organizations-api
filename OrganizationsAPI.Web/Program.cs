@@ -11,6 +11,9 @@ using OrganizationsAPI.Infrastructure.Authentication;
 using OrganizationsAPI.Web.OptionsSetup;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using Microsoft.AspNetCore.Authorization;
+using OrganizationsAPI.Infrastructure.Authorization;
+using OrganizationsAPI.Infrastructure.Authorization.PermissionService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,8 +48,14 @@ builder.Services.AddTransient<IRoleRepository, RoleRepository>();
 
 builder.Services.AddTransient<IOrganizationsService, OrganizationService>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IPermissionService, PermissionService>();
 builder.Services.AddTransient<IPasswordManager, PasswordManager>();
 builder.Services.AddTransient<IJWTProvider, JWTProvider>();
+
+builder.Services.AddAuthorization();
+
+builder.Services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
 
 var app = builder.Build();
 
