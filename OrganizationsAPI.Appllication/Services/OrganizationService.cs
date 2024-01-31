@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace OrganizationsAPI.Appllication.Services
 {
@@ -42,6 +43,23 @@ namespace OrganizationsAPI.Appllication.Services
 
             var organization = _repository.GetById(id);
 
+            if (organization.Result is null)
+            {
+                return Result.Failure<Organization>(OrganizationErrors.NotFound);
+            }
+
+            return Result.Success(organization.Result);
+        }
+
+        public Result<Organization> GetOrganizationByName(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return Result.Failure<Organization>(OrganizationErrors.InvalidIdInput);
+            }
+
+            var organization = _repository.GetByName(name);
+
             if(organization.Result is null)
             {
                 return Result.Failure<Organization>(OrganizationErrors.NotFound);
@@ -72,9 +90,9 @@ namespace OrganizationsAPI.Appllication.Services
             return Result.Success("The organization has been created successfully");
         }
 
-        public Result<string> UpdateOrganization(string id, OrganizationRequestDTO organizationDTO)
+        public Result<string> UpdateOrganization(string name, OrganizationRequestDTO organizationDTO)
         {
-            if (string.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(name))
             {
                 return Result.Failure<string>(OrganizationErrors.InvalidIdInput);
             }
@@ -84,9 +102,16 @@ namespace OrganizationsAPI.Appllication.Services
                 return Result.Failure<string>(OrganizationErrors.InvalidInput);
             }
 
+            var organizationfromDb = _repository.GetByName(name).Result;
+
+            if (organizationfromDb is null)
+            {
+                return Result.Failure<string>(OrganizationErrors.NotFound);
+            }
+
             Organization organization = new Organization
             {
-                Id = id,
+                Id = organizationfromDb.Id,
                 Name = organizationDTO.Name,
                 Website = organizationDTO.Website,
                 Country = organizationDTO.Country,
@@ -106,14 +131,21 @@ namespace OrganizationsAPI.Appllication.Services
             return Result.Success("The organization has been updated successfully");
         }
 
-        public Result<string> DeleteOrganization(string id)
+        public Result<string> DeleteOrganization(string name)
         {
-            if (string.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(name))
             {
                 return Result.Failure<string>(OrganizationErrors.InvalidIdInput);
             }
 
-            var affectedRows = _repository.SoftDelete(id);
+            var organizationfromDb = _repository.GetByName(name).Result;
+
+            if (organizationfromDb is null)
+            {
+                return Result.Failure<string>(OrganizationErrors.NotFound);
+            }
+
+            var affectedRows = _repository.SoftDelete(name);
 
             if (affectedRows.Result == 0)
             {

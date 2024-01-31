@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -9,19 +10,18 @@
   <ItemGroup>
     <ProjectReference Include="..\OrganizationsAPI.Appllication\OrganizationsAPI.Appllication.csproj" />
     <ProjectReference Include="..\OrganizationsAPI.Domain\OrganizationsAPI.Domain.csproj" />
+    <ProjectReference Include="..\OrganizationsAPI.Infrastructure\OrganizationsAPI.Infrastructure.csproj" />
+    <ProjectReference Include="..\OrganizationsAPI.Web\OrganizationsAPI.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Databases\" />
+    <PackageReference Include="CsvHelper" Version="30.1.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.1.28" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.9" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.4" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.1" />
-    <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.8.0" />
-    <PackageReference Include="QuestPDF" Version="2023.12.4" />
+    <Folder Include="Paths\Write\" />
+    <Folder Include="Paths\Read\" />
   </ItemGroup>
 
 </Project>

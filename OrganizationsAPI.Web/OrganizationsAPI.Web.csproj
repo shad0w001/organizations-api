@@ -7,6 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Quartz" Version="3.8.0" />
+    <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.8.0" />
+    <PackageReference Include="Quartz.Extensions.Hosting" Version="3.8.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="8.0.0" />
   </ItemGroup>
@@ -15,6 +18,10 @@
     <ProjectReference Include="..\OrganizationsAPI.Appllication\OrganizationsAPI.Appllication.csproj" />
     <ProjectReference Include="..\OrganizationsAPI.Domain\OrganizationsAPI.Domain.csproj" />
     <ProjectReference Include="..\OrganizationsAPI.Infrastructure\OrganizationsAPI.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="RequestDataSummary\" />
   </ItemGroup>
 
 </Project>

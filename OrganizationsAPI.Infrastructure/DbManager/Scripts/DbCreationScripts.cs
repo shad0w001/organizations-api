@@ -25,7 +25,7 @@ namespace OrganizationsAPI.Infrastructure.DbManager.Scripts
                 Founded int NOT NULL,
                 Industry varchar(100) NOT NULL,
                 NumberOfEmployees int NOT NULL,
-                UNIQUE(Id)
+                UNIQUE(Id, Name)
             );";
 
         public const string CREATE_USER_TABLE_IF_NOT_EXISTS =

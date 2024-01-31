@@ -6,6 +6,7 @@ using OrganizationsAPI.Appllication.Interfaces;
 using OrganizationsAPI.Domain.Entities;
 using OrganizationsAPI.Domain.Entities.Authentication;
 using OrganizationsAPI.Infrastructure.Authorization;
+using OrganizationsAPI.Infrastructure.PdfGenerator;
 
 namespace OrganizationsAPI.Web.Controllers
 {
@@ -14,10 +15,12 @@ namespace OrganizationsAPI.Web.Controllers
     public class OrganizationController : ControllerBase
     {
         private readonly IOrganizationsService _service;
+        private readonly IPdfGenerator _pdfGenerator;
 
-        public OrganizationController(IOrganizationsService service)
+        public OrganizationController(IOrganizationsService service, IPdfGenerator pdfGenerator)
         {
-            _service = service;   
+            _service = service;
+            _pdfGenerator = pdfGenerator;
         }
 
         [HasPermission(AuthPermissions.ReadAccess)]
@@ -35,10 +38,10 @@ namespace OrganizationsAPI.Web.Controllers
         }
 
         [HasPermission(AuthPermissions.ReadAccess)]
-        [HttpGet("get_by_id/raw/{id}")]
-        public IActionResult GetOrganizationById([FromRoute] string id)
+        [HttpGet("get_by_id/raw/{name}")]
+        public IActionResult GetOrganizationById([FromRoute] string name)
         {
-            var result = _service.GetOrganizationById(id);
+            var result = _service.GetOrganizationByName(name);
 
             if (result.IsFailure)
             {
@@ -48,19 +51,19 @@ namespace OrganizationsAPI.Web.Controllers
             return Ok(result.Value);
         }
 
-        [HasPermission(AuthPermissions.ReadAccess)]
-        [HttpGet("get_by_id/pdf/{id}")]
-        public IActionResult GetPdfByOrganizationId([FromRoute] string id)
+        //[HasPermission(AuthPermissions.ReadAccess)]
+        [HttpGet("get_by_id/pdf/{name}")]
+        public IActionResult GetPdfByOrganizationId([FromRoute] string name)
         {
-            var result = _service.GetOrganizationById(id);
+            var result = _service.GetOrganizationByName(name);
 
             if (result.IsFailure)
             {
                 return StatusCode(500, result.Error);
             }
-
+            
             //it will return a pdf file in the future
-            return Ok(result.Value);
+            return File(_pdfGenerator.GenerateOrganizationPdf(result.Value), "application/pdf", "generated.pdf");
         }
 
         [HasPermission(AuthPermissions.WriteAccess)]
@@ -78,10 +81,10 @@ namespace OrganizationsAPI.Web.Controllers
         }
 
         [HasPermission(AuthPermissions.WriteAccess)]
-        [HttpPut("update_by_id/{id}")]
-        public IActionResult UpdateOrganizationById([FromRoute] string id, [FromBody] OrganizationRequestDTO organizationDTO)
+        [HttpPut("update_by_name/{name}")]
+        public IActionResult UpdateOrganizationById([FromRoute] string name, [FromBody] OrganizationRequestDTO organizationDTO)
         {
-            var result = _service.UpdateOrganization(id, organizationDTO);
+            var result = _service.UpdateOrganization(name, organizationDTO);
 
             if (result.IsFailure)
             {
@@ -92,10 +95,10 @@ namespace OrganizationsAPI.Web.Controllers
         }
 
         [HasPermission(AuthPermissions.FullAccess)]
-        [HttpDelete("delete/{id}")]
-        public IActionResult DeleteOrganizationById([FromRoute] string id)
+        [HttpDelete("delete_by_name/{name}")]
+        public IActionResult DeleteOrganizationById([FromRoute] string name)
         {
-            var result = _service.DeleteOrganization(id);
+            var result = _service.DeleteOrganization(name);
 
             if (result.IsFailure)
             {
